@@ -62,7 +62,7 @@ const TriviaApp = () => {
             <h1>Trivia Game</h1>
           </div>
           <div className='title-container'>
-            <div>Current Score: { score }</div>
+            <div className='score'>Current Score: { score }</div>
           </div>
 
           
