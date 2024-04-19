@@ -42,17 +42,18 @@ const TriviaApp = () => {
     return shuffledArray;
   };
 
-  const handleAnswerClick = (answer, correctAnswer) => {
-    const isCorrect = correctAnswer[0] === answer;
-    setAnswerVisibility((prevVisibility) => ({
-      ...prevVisibility,
-      [answer]: isCorrect ? "success" : "error",
-    }));
-    if (isCorrect) {
-      setScore(score + 1);
-      console.log(score);
-    }
-  };
+const handleAnswerClick = (questionIndex, answer, correctAnswer) => {
+  const isCorrect = correctAnswer[0] === answer;
+  setAnswerVisibility((prevVisibility) => ({
+    ...prevVisibility,
+    [`${questionIndex}-${answer}`]: isCorrect ? "success" : "error",
+  }));
+  if (isCorrect) {
+    setScore(score + 1);
+    console.log(score);
+  }
+};
+
 
   return (
     <body>
@@ -80,12 +81,12 @@ const TriviaApp = () => {
                         {shuffledAnswers.map((answer, answerIndex) => (
                           <div className='answer-button' key={answerIndex}>
                             <Button
-                              id='button'
-                              variant="contained"
-                              color={answerVisibility[answer] ? (answerVisibility[answer] === "success" ? "success" : "error") : "primary"}
-                              onClick={() => handleAnswerClick(answer, correctAnswer)}
-                            >
-                              {answer}
+                                id='button'
+                                variant="contained"
+                                color={answerVisibility[`${questionIndex}-${answer}`] ? (answerVisibility[`${questionIndex}-${answer}`] === "success" ? "success" : "error") : "primary"}
+                                onClick={() => handleAnswerClick(questionIndex, answer, correctAnswer)}
+                              >
+                                {answer}
                             </Button>
                           </div>
                         ))}
