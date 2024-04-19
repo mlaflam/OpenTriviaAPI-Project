@@ -1,0 +1,12 @@
+.answers-container {
+  display: block;
+}
+
+.incorrect-button-hide {
+  font-size: 14px;
+}
+
+.incorrect-button-show {
+  font-size: 14px;
+  background-color: red;
+}
