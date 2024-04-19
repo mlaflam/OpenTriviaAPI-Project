@@ -6,6 +6,7 @@ import theme from './Theme.jsx'; // Import your custom theme
 const TriviaApp = () => {
   const [questions, setQuestions] = useState(null);
   const [answerVisibility, setAnswerVisibility] = useState({});
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,10 +20,11 @@ const TriviaApp = () => {
           const shuffledAnswers = shuffleArray(allAnswers);
           return { ...question, shuffledAnswers };
         });
+        setScore(0); //reset score with each refresh
 
         setQuestions(shuffledQuestions);
-        console.log('Success! Status:', result.status);
-        console.log('JSON Results:', resultJSON);
+        // console.log('Success! Status:', result.status);
+        // console.log('JSON Results:', resultJSON);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -42,44 +44,64 @@ const TriviaApp = () => {
 
   const handleAnswerClick = (answer, correctAnswer) => {
     const isCorrect = correctAnswer[0] === answer;
-    console.log(correctAnswer);
-    console.log(answer);
-    console.log(isCorrect);
     setAnswerVisibility((prevVisibility) => ({
       ...prevVisibility,
       [answer]: isCorrect ? "success" : "error",
     }));
+    if (isCorrect) {
+      setScore(score + 1);
+      console.log(score);
+    }
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <div>
-        <h1>Trivia App</h1>
-        {questions && questions.map((question, questionIndex) => {
-          const correctAnswer = [question.correctAnswer];
-          const shuffledAnswers = question.shuffledAnswers;
+    <body>
+      <ThemeProvider theme={theme}>
+        <div className='app-container'>
+          <div className='title-container'>
+            <h1>Trivia Game</h1>
+          </div>
+          <div className='title-container'>
+            <div>Current Score: { score }</div>
+          </div>
+
           
-          return (
-            <div key={questionIndex}>
-              <p>{question.question.text}</p>
-              <div className='answers-container'>
-                {shuffledAnswers.map((answer, answerIndex) => (
-                  <div key={answerIndex}>
-                    <Button
-                      variant="contained"
-                      color={answerVisibility[answer] ? (answerVisibility[answer] === "success" ? "success" : "error") : "primary"}
-                      onClick={() => handleAnswerClick(answer, correctAnswer)}
-                    >
-                      {answer}
-                    </Button>
+            {questions && questions.map((question, questionIndex) => {
+            const correctAnswer = [question.correctAnswer];
+            const shuffledAnswers = question.shuffledAnswers;
+            
+            return (
+            <div className='all-questions-container'>
+                <div key={questionIndex} className='question-container'>
+                  <div>
+                    <p className='question'>{questionIndex + 1}. {question.question.text}</p>
+                    <div className='grid-container'>
+                      <div className='answers-container'>
+                        {shuffledAnswers.map((answer, answerIndex) => (
+                          <div className='answer-button' key={answerIndex}>
+                            <Button
+                              id='button'
+                              variant="contained"
+                              color={answerVisibility[answer] ? (answerVisibility[answer] === "success" ? "success" : "error") : "primary"}
+                              onClick={() => handleAnswerClick(answer, correctAnswer)}
+                            >
+                              {answer}
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </ThemeProvider>
+
+                  </div>
+                </div>
+            );
+          })}
+          
+        </div>
+        </ThemeProvider>
+      </body>
   );
 };
 
